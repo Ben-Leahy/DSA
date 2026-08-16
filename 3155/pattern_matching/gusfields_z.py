@@ -60,6 +60,8 @@ def z_algorithm(s: str) -> list[int]:
 ################################################################################
 def naive_preprocessing(s: str) -> list[int]:
     # Define z of length len(s) initiated with 0
+    if len(s) <= 0:
+        return []
     z = [len(s)] + [0]*(len(s) - 1)
     for i in range(1, len(s)):
         for j in range(0, len(s)):
@@ -109,7 +111,7 @@ def test_z_multiple():
         # TODO why are they random length strings what the hell? My generation algo is fuked. 
 
 def test():
-    tests = ["bbabbbabbabbcbabcba", "aaaabbabaabbaabababaabbaababaaaaabbbababa", "abbcbabbcbcabbcbabcbabaabababbcbcabbabbbabbabbcbabcba", "bbbbbbbbbbbbbbbbbbbbb"]
+    tests = ["", "a", "aa", "bbabbbabbabbcbabcba", "aaaabbabaabbaabababaabbaababaaaaabbbababa", "abbcbabbcbcabbcbabcbabaabababbcbcabbabbbabbabbcbabcba", "bbbbbbbbbbbbbbbbbbbbb"]
     for test in tests:
         
         z1 = naive_preprocessing(test)
