@@ -91,21 +91,21 @@ def construct_string(str_len: int):
     return string
 
 def test_z_once(str_len:int = 10000):
-    print("#################################### single z test")
+    # print("#################################### single z test")
     s = construct_string(str_len)    
     z1 = naive_preprocessing(s)
     z2 = z_algorithm(s)
 
-    print("Zn: " + str(z1))
-    print("Zg: " + str(z2))
-    print('s: ' + s)
-    print(z1==z2)
+    # print("Zn: " + str(z1))
+    # print("Zg: " + str(z2))
+    # print('s: ' + s)
+    print("Z matches naive: ", z1==z2)
 
 def test_z_multiple():
     # TODO I should do this in parallel so that I can speeed up the naive version
-    test_count = 5
+    test_count = 20
     for _ in range(test_count):
-        test_z_once(20) #Change after testing 
+        test_z_once(2000) #Change after testing 
         # TODO why are they random length strings what the hell? My generation algo is fuked. 
 
 def test():
@@ -115,10 +115,10 @@ def test():
         z1 = naive_preprocessing(test)
         z2 = z_algorithm(test)
 
-        print("############################################ custom z test")
-        print("test: " + test)
-        print("Zn: " + str(z1))
-        print("Zg: " + str(z2))
+        # print("############################################ custom z test")
+        # print("test: " + test)
+        # print("Zn: " + str(z1))
+        # print("Zg: " + str(z2))
         print("Z matches naive: ", z1==z2)
 
 if __name__ == '__main__':
