@@ -26,7 +26,7 @@ def z_algorithm(s: str) -> list[int]:
         if k > r:
             # print("case 1")
             for i in range(0, n - k):
-                if s[i] == s[i + k]:
+                if s[i] == s[i + k]: 
                     z[k] += 1
                 else:
                     break
@@ -38,30 +38,20 @@ def z_algorithm(s: str) -> list[int]:
         else:
             # Case 2a:
             if z[k - l] < r - k + 1: 
-                # print("Case 2a")
-                # print("z: " + str(z) + '\n l: ' + str(l) + '\n r: ' + str(r) + '\n k: ' + str(k) + '\n')
                 z[k] = z[k - l] 
 
             # Case 2b:
             elif z[k - l] > r - k + 1:
-                # print("Case 2b")
-                # print("z: " + str(z) + '\n l: ' + str(l) + '\n r: ' + str(r) + '\n k: ' + str(k) + '\n')
                 z[k] = r - k + 1 
-                # l=k # optional?
 
             # Case 2c: z[k-l] = r - k + 1:
             else: 
-                # print("Case 2c")
-                # print("z: " + str(z) + '\n l: ' + str(l) + '\n r: ' + str(r) + '\n k: ' + str(k) + '\n')
-                # Iterate from end of prefix matched so far
-                # for i in range(r - k, n - k):
                 z[k] = r - k + 1
-                for i in range(r - k + 1, n - r):
-                    if s[i] == s[i + k]: # we alr know s[i + k] = s[r]
+                for i in range(0, n - 1 - r): 
+                    if s[r - k + 1 + i] == s[r + i + 1]: 
                         z[k] += 1
                     else:
                         break
-                # If the substring matches a longer prefix update
                 l = k
                 r = k + z[k] - 1
     return z
