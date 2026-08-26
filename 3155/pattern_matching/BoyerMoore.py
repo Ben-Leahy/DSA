@@ -58,10 +58,11 @@ def goodSuffixList(pattern: list, Zsuffix: list) -> list:
     m = |pattern|
     gs(m - Zsuffix[i] + 1) = i"""
     m = len(pattern)
-    GS = [0] * m + [1]# Might need to check implication of 0 with regards to how it is used. Might need to default to m-1 or smth
+    gs = [0] * m + [1]# Might need to check implication of 0 with regards to how it is used. Might need to default to m-1 or smth
     for i in range(m):
-        GS[m - Zsuffix[i] + 1] = i
-    GS[-1] = 1
+        gs[m - Zsuffix[i] + 1] = i
+    gs[-1] = 1
+    return gs
 
 def MatchedPrefix(s: list):
     """DEF: MP[i] stores the length of the largest suffix of S from S[i...N] that matches the prefix of S"""
