@@ -32,7 +32,7 @@ def findRank(bwt: list, counts: list) -> list[int]:
     return rank
 
 def nOccurences(bwt: list) -> list[int]:
-
+    # matrix for pattern matching
     pass
 
 # Q4
