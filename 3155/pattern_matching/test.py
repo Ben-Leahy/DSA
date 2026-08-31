@@ -1,10 +1,9 @@
-# m = [[-1] * 4] * 5
-# print(m)
-# m[0][2] = 5
-# print(m)
 
 
-n = [[0] * 3 for _ in range(5)]
-print (n)
-n[0][1] = 5
-print(n)
+import random
+
+len_alphabet = round(random.randint(2, 4))
+print(len_alphabet)
+possible_alphabet = ['a', 'b', 'c', 'd']
+alphabet = possible_alphabet[0:len_alphabet]
+print(alphabet)
