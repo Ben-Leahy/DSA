@@ -28,3 +28,6 @@ def lzss():
     # [1, char] for length of less than 3
     # [0, offset, lenght] for length of 3 or more
     pass
+
+def lzss_decoding():
+    pass
