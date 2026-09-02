@@ -17,38 +17,44 @@ def elias_omega_encoding(num: int):
 
     # Prepend length components: minimum binary encoding of previous segment-1
     while length > 1:
-        length_component = flip_leading(min_bin_encoding(length - 1))
+        length_component = flip_leading_bit(min_bin_encoding(length - 1))
         bit_encoding = length_component + bit_encoding
         length = len(length_component)
 
     return bit_encoding
     
-def elias_omega_decoding() -> int:
+def elias_omega_decoding(encoding: []) -> int:
     """
     :inpput: Takes in bit array elias omega encoding of number
     :output: decimal of number"""
-    pass
-    #read the first bit
-    # if 0, it is a length component. Flip leading to 0. Find decimal
-    # Read next decimal numbers
-    # if leading is 0, flip leading, find decimal, read next decimal numbers
-    # If leading is 1, read the digits and convert to decimal
+    # Base case
+    if encoding[0] == 1:
+        return 1
 
-    # Wait what happens to rpresent numbers 0 and 1?
-        # 0 we can't do this, it's just for integers. 
-        # 1 is 1 -> 1
-        # 2 is 10 -> 1 10 -> 010
-    # I clearly don't understand becuase doesn't 0 mean 1 mean search 1 bit? It must mean +1. Otherwise we couldn't grow it. 
-    
-    # To map this to negative , 0 and positive integers, 
-        # 0 -> 1
-        # 1 -> 2
-        # -1 -> 3
+    read_from = 0
+    segment = read(1, read_from, encoding)
+
+    while True:
+        # If decode number
+        if segment[0] == 1:
+            return binary_to_int(segment)
+        # Decode length component
+        else:
+            bin = flip_leading_bit(segment)
+            length = binary_to_int(bin) + 1
+            read_from += len(segment)
+            segment = read(length, read_from, encoding)
+
+def read(num, from_index : int, list:list[int]) -> list[int]:
+    return []
 
 def min_bin_encoding(num: int) -> list[int]: 
     return []
 
-def flip_leading(d):
+def binary_to_int(list:list[int]) -> int:
+    return 0
+
+def flip_leading_bit(d: list[int]):
     return []
 
 """proof
