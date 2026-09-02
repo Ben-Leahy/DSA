@@ -2,6 +2,14 @@ from __future__ import annotations
 
 """Reflectoin from class. Just follow the class and if there are other things ii want to investigate note them down and do them later."""
 
+"""
+TODO
+    Find a better data type to store the bits
+    Change all of the noted functions to work with this data type
+    Test
+
+    This is left for if we need to do it for an assignment. Otheriwse knowledge is there.
+"""
 # How to encode the tree vs the sorted array that we need to refer to?
 # How to deal with binary numbers?
 class Edge: 
@@ -47,65 +55,74 @@ def create_sorted_nodes(unique_freqs: list[int]) -> list[Node]:
     return nodes
 
 
-def huffman(nodes: list[Node]) -> Node | None:
+def huffman_graph(nodes: list[Node]) -> Node | None:
     """
-    Construct a deterministic variable length encoding for characters. 
-    This is necessary to compress - we can store more common examples with shorter characters. 
-    This needs to be prefix free to go in both directions
-    The basic idea is to store each encoding as a path to a leaf in a strict binary tree. This way no leaf is a prefix of another leaf.
-    This generates the decoding graph.
-    :input: a list of tuples: [frequency, char/string, ]
+    Construct graph from nodes containing char and freq.
+    This is used for decoding.  
+
+    :input: list[ Node(title, freq, is_leaf, edges)
     :output: root node of the graph"""
-    """Do we assume that our alphabet is om"""
     # TODO this doesn't work for nodes of length less than 2
     root = None
     while len(nodes) >= 2:
-        # Select top 2 
+        # Select top 2 nodes, and combine
         title = nodes[0].title + nodes[1].title
         freq = nodes[0].freq + nodes[1].freq
         is_leaf = False
         edges = [Edge(0, nodes[0]), Edge(1, nodes[1])]
         root = Node(title, freq, is_leaf, edges)
 
+        # Replace old nodes with new
         nodes = nodes[2:]
-        # Change this to a bubble sort so that it had better time complexity. 
+        # TODO Change this to a bubble sort so that it had better time complexity. 
         nodes.append(root)
         nodes.sort()
 
     return root
-    # While sorted_freqs length >= 2:
-        # Select top 2, sorted_freqs[0], sorted_freqs[1]
-        # Create a new node that points to them: 0 to the one with the lower freq, with freq= sorted_freqs[0] + sorted_freqs[1]
-        # Also have a pointer to root which is updated to a new node each time. 
-        # Remove sorted_freqs[0], sorted_freqs[1] from the sorted_freqs
 
-        # What is missing is that we need a way to link the nodes and the array. 
-        # I think that the array should actually store the nodes as well.
-        # We could create leaf nodes for everything in the array, then when we get rid of them we are just inserting a node with a new frequency that points to two existing nodes So we can safely delet ethem from the array. 
-    # Depth first search to generate encoding table
-        # Start at root
-        # Add edge 
-
-    # in our array as well, we much need a custom comparison: becaue we will need to store both the node and the frequency, we will need a tuple and set custom comparison as the first element of the tuple (freq)
-
-def encoding_table(root: Node) -> list[int]:
+def encoding_table(root: Node) -> list[list[int]]:
     """Generate encoding table from graph.
     :input: the root node of the graph
     :output: array of size alphabet that stores the binary encoding of that letter"""
     # Implement some kind of depth first search
+    # We probably want to output an array of size alphabet. 
+    # Then it is O(1) lookup.
+    # TODO this function will also need ot be changed after 
+    encoding_table = [[]] * 128
+    dfs(root, [], encoding_table)
+    return encoding_table
 
-    # Start at root node
-    # we re run encoding table for both edges, and pass in the encoding so far. Ie a string. 
-    # Base case:
-        # if we are at a leaf, then return the string passed in. 
 
-# def frequencies(ascii_start: int, ascii_end: int, txt: str) -> list[int]:
-#     """Generate an array of size alphabet, that stores the frequency of each character"""
-#     pass
+def dfs(node: Node, bits: list[int], encoding_table: list[list[int]]) -> None:
+    # TODO We are starting with using an array of integers to represent the binary number, then we can convert
+    # To a better suited bit focussed data type.
+    if node.is_leaf:
+        encoding_table[ord(node.title)] = bits
+    else:
+        bits0 = bits.copy()
+        bits1 = bits.copy()
+        bits0.append(node.edges[0].val)
+        bits1.append(node.edges[1].val)
+        dfs(node.edges[0].to_node, bits0, encoding_table)
+        dfs(node.edges[1].to_node, bits1, encoding_table)
+    return None
 
-def sorted_frequencies(freqs: list[int]) -> list[int]:
-    pass
+def encode(txt:str, encoding_table):
+    # TODO this changes with data type as well
+    encoding = []
+    for char in txt:
+        encoding += [encoding_table[ord(char)]]
+    return encoding
 
+def decode(encoding, root:Node):
+    # TODO this changes with data type as well.
+    output = ''
+    curr_node = root
+    for bit in encoding:
+        if curr_node.is_leaf:
+            output += curr_node.title
+        else:
+            curr_node = curr_node.edges[bit]
 
 """
 Proofs:
@@ -120,6 +137,14 @@ Proofs:
 
         The smallest total space for this is multiplying c1*l1, c2*l2, ci*li
         If this was not minimal, then some c1*l2 + c2*l1 < c1*l1 + c2*l2
+
+Huffman explanation:
+    Construct a deterministic variable length encoding for characters. 
+        This is necessary to compress - we can store more common examples with shorter characters. 
+        This needs to be prefix free to go in both directions
+        The basic idea is to store each encoding as a path to a leaf in a strict binary tree. This way no leaf is a prefix of another leaf.
+        This generates the decoding graph.
+
 
 Notes:
     For decoding, graph is necessary. 
