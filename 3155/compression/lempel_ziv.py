@@ -1,9 +1,15 @@
-def lempel_ziv():
+def lempel_ziv(txt: str):
     MAX_SEARCH_WINDOW = 10
     MAX_LOOKAHEAD_BUFFER = 10
     sw = 0 # search window
     lb = MAX_LOOKAHEAD_BUFFER# lookahead buffer
     i = 0
+
+    n = len(txt)
+    for i in range(n):
+        # Find maximum length between sw and lb
+
+        # Okay instead to do this it's the sw*n, and we just prepend [i...lb+i] with [i-sw... i] and run z
 
     # longest substring from i to MAX_LOOKAHEAD_BUFFER that matches some string in sw to lb
     # use some data structure we have already learnt to do this. 
