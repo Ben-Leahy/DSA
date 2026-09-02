@@ -1,14 +1,27 @@
-def elias_omega():
-    pass
-    # find minimum binary encoding of the number. 
-        # length = length of bit array
+"""
+TODO:
+    - Implement the min_binary_encoding
+    - 
+"""
 
-    # find binary encoding of length
-        # Flip leading character to 0
+def elias_omega_encoding(num: int):
+    # TODO this could be recursive, would that be better? 
 
-    # Find the length of the previous length component until the new length is 1, ie the previous was 2
-        # Flip leading character to 0
+    # Base case
+    if num == 1:
+        return 1
 
+    # Encode number (minimum binary encoding)
+    bit_encoding = min_bin_encoding(num)
+    length = len(bit_encoding)
+
+    # Prepend length components: minimum binary encoding of previous segment-1
+    while length > 1:
+        length_component = flip_leading(min_bin_encoding(length - 1))
+        bit_encoding = length_component + bit_encoding
+        length = len(length_component)
+
+    return bit_encoding
     
 def elias_omega_decoding() -> int:
     """
@@ -32,11 +45,11 @@ def elias_omega_decoding() -> int:
         # 1 -> 2
         # -1 -> 3
 
-def min_bin_encoding(num: int): 
-    # Something to do with remainders. 
-    pass
-# TODO figure out how to work with binary numbers
+def min_bin_encoding(num: int) -> list[int]: 
+    return []
 
+def flip_leading(d):
+    return []
 
 """proof
 Assume they are not uniquely encodable
