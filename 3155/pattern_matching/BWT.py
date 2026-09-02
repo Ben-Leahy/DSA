@@ -2,6 +2,46 @@
 
 # use ord() function
 
+"""
+BWT = L
+Burrows wheeler transform of a text is:
+    - create a matrix of all possible cyclic rotations of a txt
+    - sort these cyclic rotations
+    - take the last column
+
+This is useful because we can match k patterns with h ocurrences of length m, from a text of length n in:
+O(k*h*m + n)
+ie we can preprocess the text once.
+
+"""
+
+def create_bwt(txt: str) -> str:
+    # Create matrix of suffixes
+    n = len(txt)
+    doubled_txt = txt + txt
+    suffixes = []
+    for i in range(n):
+        suffixes.append(doubled_txt[i : i + n])
+
+    # Sort matrix of suffixes
+    suffixes.sort()
+    
+    # Take the last column and return
+    bwt = ''
+    for i in range(len(suffixes)):
+        bwt += suffixes[i][-1]
+
+    return bwt
+
+
+def txt_from_bwt(bwt: list[str]) -> list[str]:
+    pass
+
+def pattern__match(bwt: list[str], pattern: list[str]) -> list[str]:
+    """
+    :output: returns a list of all the indexes where the pattern begins
+    """
+    pass
 
 # What if I make a data structure that has alphabet, and rank. then at each index 
 def count(bwt: list, alphabet):
@@ -13,7 +53,7 @@ def count(bwt: list, alphabet):
         counts[j] += 1
     return counts
     
-def findIndex(char, alphabet):
+def findIndex(char, alphabet) -> int:
     # TODO make this more efficient
     for i in range(len(alphabet)):
         if alphabet[i] == char:
