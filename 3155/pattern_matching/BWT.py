@@ -37,10 +37,20 @@ def create_bwt(txt: str) -> str:
 def txt_from_bwt(bwt: list[str]) -> list[str]:
     pass
 
-def pattern__match(bwt: list[str], pattern: list[str]) -> list[str]:
+def pattern__match(bwt: list[str], pattern: list[str], rank: list[int]) -> list[str]:
     """
+    We assume ascii characters between 97 and 122
     :output: returns a list of all the indexes where the pattern begins
     """
+    m = len(pattern)
+    n = len(bwt) # same as length of txt
+    sp = 0
+    ep = n - 1
+    for i in range(m):
+        sp = rank[ord(pattern[i])] + nOccurences[pat(i)] # TODO firstly, let's go back and actually make these data structures
+        # we want to make them such that we can index based on the ord(char) - ASCII_RANGE, where ascii_range = 122-97
+        # once we know this the pattern match is basically done. then we want to look at assignment again and compare 
+
     pass
 
 # What if I make a data structure that has alphabet, and rank. then at each index 
