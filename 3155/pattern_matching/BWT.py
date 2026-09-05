@@ -85,9 +85,32 @@ def findRank(bwt: list, counts: list) -> list[int]:
             max_rank = rank[i]
     return rank
 
-def nOccurences(bwt: list) -> list[int]:
-    # matrix for pattern matching
-    pass
+def create_n_occurences(bwt: list[str]) -> list[int]:
+    """
+    nOccurences[char, i] stores the number of occurences of char in BWT(S) from 1...i INCLUSIVE
+
+    complexity: O(|Alphabet| * |bwt|)
+    storage: O(|Alphabet| * |bwt|)
+    """
+    ALPHABET_LENGTH = 122-97
+    n = len(bwt)
+    matrix = [[0] * ALPHABET_LENGTH for _ in range(n)] # inner is alphabet
+
+    for i, char in enumerate(bwt):
+        if i > 0:
+            matrix[i] = matrix[i - 1]
+        matrix[i][index(char)] += 1
+
+def n_occurences(char: str, i: int, inclusive: bool, occurences: list[list[int]]) -> int:
+    # Base case
+    if i == 0 and not inclusive:
+        return 0
+    else:
+        if inclusive:
+            return occurences[index(char), i]
+        else:
+            return occurences[index(char), i - 1]
+
 
 # Q4
 # If we are doing inversion, then we only need an array for occurences, 
