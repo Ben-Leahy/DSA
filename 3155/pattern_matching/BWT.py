@@ -14,44 +14,53 @@ O(k*h*m + n)
 ie we can preprocess the text once.
 
 """
-
-def create_bwt(txt: str) -> str:
+def create_bwt_and_SA(txt: str) -> str:
     # Create matrix of suffixes
     n = len(txt)
     doubled_txt = txt + txt
-    suffixes = []
+    suffixes = [] # list of tuples: (lst[str], int)
     for i in range(n):
-        suffixes.append(doubled_txt[i : i + n])
+        tuple = (doubled_txt[i : i + n], i)
+        suffixes.append(tuple)
 
     # Sort matrix of suffixes
-    suffixes.sort()
+    suffixes.sort(key = lambda tuple: tuple[0])
     
     # Take the last column and return
     bwt = ''
+    SA = []
     for i in range(len(suffixes)):
-        bwt += suffixes[i][-1]
+        bwt += suffixes[i][0][-1]
+        SA.append(suffixes[i][1])
 
-    return bwt
+    return bwt, SA
 
+def compare(tuple):
+    return tuple[0]
 
 def txt_from_bwt(bwt: list[str]) -> list[str]:
     pass
 
-def pattern__match(bwt: list[str], pattern: list[str], rank: list[int]) -> list[str]:
+def pattern__match(bwt: list[str], SA: list[int], pattern: list[str], rank: list[int]) -> list[int]:
     """
     We assume ascii characters between 97 and 122
     :output: returns a list of all the indexes where the pattern begins
     """
-    m = len(pattern)
     n = len(bwt) # same as length of txt
     sp = 0
     ep = n - 1
-    for i in range(m):
-        sp = rank[ord(pattern[i])] + nOccurences[pat(i)] # TODO firstly, let's go back and actually make these data structures
-        # we want to make them such that we can index based on the ord(char) - ASCII_RANGE, where ascii_range = 122-97
-        # once we know this the pattern match is basically done. then we want to look at assignment again and compare 
+    counts = findCount(bwt)
+    rank = findRank(bwt, counts)
+    occurences = create_n_occurences(bwt)
 
-    pass
+    for char in pattern:
+        if sp >= ep:
+            return []
+        else:
+            sp = rank[index(char)] + n_occurences(char, sp, occurences, inclusive=False)
+            ep = rank[index(char)] + n_occurences(char, ep - 1, occurences, inclusive=True)
+    # sp and ep store with regards to bwt, so we want to convert this to the start indexes of S. 
+    return SA[sp : ep + 1]
 
 def findCount(bwt: list):
     """
@@ -101,7 +110,10 @@ def create_n_occurences(bwt: list[str]) -> list[int]:
             matrix[i] = matrix[i - 1]
         matrix[i][index(char)] += 1
 
-def n_occurences(char: str, i: int, inclusive: bool, occurences: list[list[int]]) -> int:
+def n_occurences(char: str, i: int, occurences: list[list[int]], inclusive: bool) -> int:
+    """
+    input:
+        i: range, from 1...i that we are searching for char within bwt"""
     # Base case
     if i == 0 and not inclusive:
         return 0
