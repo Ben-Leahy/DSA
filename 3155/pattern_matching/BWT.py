@@ -53,29 +53,33 @@ def pattern__match(bwt: list[str], pattern: list[str], rank: list[int]) -> list[
 
     pass
 
-# What if I make a data structure that has alphabet, and rank. then at each index 
-def count(bwt: list, alphabet):
-    """Number of occurences of each letter in the alphabet"""
-    # O(|Alphabet| * |bwt|)
-    counts = [0] * len(alphabet)
+def findCount(bwt: list):
+    """
+    count[i] stores the number of occurences of chr[i+97] in S. (Clearly alphabetically)
+
+    Complexity: O(|Alphabet| * |bwt|)
+    Storage: O(|Alphabet|)
+    """
+    ALPHABET_LENGTH = 122-97
+    counts = [0] * ALPHABET_LENGTH
     for char in bwt:
-        j = findIndex(char, alphabet)
-        counts[j] += 1
+        counts[index(char)] += 1
     return counts
     
-def findIndex(char, alphabet) -> int:
-    # TODO make this more efficient
-    for i in range(len(alphabet)):
-        if alphabet[i] == char:
-            return i
+def index(char) -> int:
+    """Assumes alphabet is ascii range 97 - 122"""
+    return ord(char) - 97
 
 def findRank(bwt: list, counts: list) -> list[int]:
-    """O(|Alphabet| + |Alphabet| * |bwt|) = O(|Alphabet| * |bwt|)"""
-    # TODO what should the rank be for letters that don't occur -> occurences will be 0, rank will be 0, then ep will -1. 
+    """
+    Rank[char] stores the index of the first occurence of char in F: F = sorted(S), 
+        or 0 if there are no occurences. In this case, regardless of the value, ep < sp
+    
+    Complexity: O(|Alphabet| + |Alphabet| * |bwt|) = O(|Alphabet| * |bwt|)
+    Storage: O(|Alphabet|) """
     max_rank = 0
     rank = [0] * len(counts)
     for i in range(1, len(counts)):
-        # rank[i] = rank[i-1] + counts[i-1]
         if counts[i] > 0:
             rank[i] = max_rank + counts[i-1]
             max_rank = rank[i]
@@ -96,14 +100,14 @@ def nOccurencesArrayForInversion(bwt, alphabet_size):
     nOccurences = [0] * n
     for i in range(n):
         char = bwt[i]
-        nOccurences[i] = count[findIndex(char)]
-        count[findIndex(char)] += 1
+        nOccurences[i] = count[index(char)]
+        count[index(char)] += 1
 
 def nOccurences(bwt, alphabet)
 
 if "__main__" == __name__:
     alphabet = ['$', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     bwt = ['o', 'o', 'o', 'l', 'o', 'o', 'o', 'o', 'o', 'l', 'w', 'm', 'l']
-    counts = count(bwt, alphabet)
+    counts = findCount(bwt, alphabet)
     print(counts)
     print(findRank(bwt, counts))
