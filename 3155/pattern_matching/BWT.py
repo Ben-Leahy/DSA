@@ -1,68 +1,20 @@
-# We have done Q6. 
-
-# use ord() function
-
-"""
-BWT = L
-Burrows wheeler transform of a text is:
-    - create a matrix of all possible cyclic rotations of a txt
-    - sort these cyclic rotations
-    - take the last column
-
-This is useful because we can match k patterns with h ocurrences of length m, from a text of length n in:
-O(k*h*m + n)
-ie we can preprocess the text once.
-
-"""
-def create_bwt_and_SA(txt: str) -> str:
-    # Create matrix of suffixes
+#==============================================================
+# HELPER FUNCTIONS
+#==============================================================
+def create_suffix_matrix(txt: str) -> list[tuple[str, int]]:
+    """returns a list of tuples, each containing a suffix and the index they start at with respect to txt"""
     n = len(txt)
     doubled_txt = txt + txt
-    suffixes = [] # list of tuples: (lst[str], int)
+    suffixes = [] # list of tuples: (str, int)
     for i in range(n):
         tuple = (doubled_txt[i : i + n], i)
         suffixes.append(tuple)
+    return suffixes
 
-    # Sort matrix of suffixes
-    suffixes.sort(key = lambda tuple: tuple[0])
-    
-    # Take the last column and return
-    bwt = ''
-    SA = []
-    for i in range(len(suffixes)):
-        bwt += suffixes[i][0][-1]
-        SA.append(suffixes[i][1])
+def create_sorted_suffix_matrix(txt: str) -> list[list[str]]:
+    return create_suffix_matrix(txt).sort(key = lambda tuple: tuple[0])
 
-    return bwt, SA
-
-def compare(tuple):
-    return tuple[0]
-
-def txt_from_bwt(bwt: list[str]) -> list[str]:
-    pass
-
-def pattern__match(bwt: list[str], SA: list[int], pattern: list[str], rank: list[int]) -> list[int]:
-    """
-    We assume ascii characters between 97 and 122
-    :output: returns a list of all the indexes where the pattern begins
-    """
-    n = len(bwt) # same as length of txt
-    sp = 0
-    ep = n - 1
-    counts = findCount(bwt)
-    rank = findRank(bwt, counts)
-    occurences = create_n_occurences(bwt)
-
-    for char in pattern:
-        if sp >= ep:
-            return []
-        else:
-            sp = rank[index(char)] + n_occurences(char, sp, occurences, inclusive=False)
-            ep = rank[index(char)] + n_occurences(char, ep - 1, occurences, inclusive=True)
-    # sp and ep store with regards to bwt, so we want to convert this to the start indexes of S. 
-    return SA[sp : ep + 1]
-
-def findCount(bwt: list):
+def create_counts(bwt: list):
     """
     count[i] stores the number of occurences of chr[i+97] in S. (Clearly alphabetically)
 
@@ -79,7 +31,19 @@ def index(char) -> int:
     """Assumes alphabet is ascii range 97 - 122"""
     return ord(char) - 97
 
-def findRank(bwt: list, counts: list) -> list[int]:
+#==============================================================
+# REFERENCE TABLE CREATION
+#==============================================================
+def create_bwt_and_SA(txt: str) -> str:
+    sorted_suffix_matrix = create_sorted_suffix_matrix(txt)
+    sa = []
+    bwt = ''
+    for [suffix, i] in sorted_suffix_matrix:
+        bwt += suffix[-1]
+        sa.append(i)
+    return bwt, sa
+
+def create_rank(bwt: list, counts: list) -> list[int]:
     """
     Rank[char] stores the index of the first occurence of char in F: F = sorted(S), 
         or 0 if there are no occurences. In this case, regardless of the value, ep < sp
@@ -123,6 +87,43 @@ def n_occurences(char: str, i: int, occurences: list[list[int]], inclusive: bool
         else:
             return occurences[index(char), i - 1]
 
+#==============================================================
+# PATTERN MATCHING
+#==============================================================
+def pattern__match(txt:str, pattern: list[str]) -> list[int]:
+    """
+    We assume ascii characters between 97 and 122
+    :output: returns a list of all the indexes where the pattern begins
+    """
+    n = len(bwt) # same as length of txt
+    counts = create_counts(bwt)
+    rank = create_rank(bwt, counts)
+    occurences = create_n_occurences(bwt)
+    bwt, sa = create_bwt_and_SA(txt)
+
+    sp = 0
+    ep = n - 1
+    for char in pattern:
+        if sp >= ep:
+            return []
+        else:
+            sp = rank[index(char)] + n_occurences(char, sp, occurences, inclusive=False)
+            ep = rank[index(char)] + n_occurences(char, ep - 1, occurences, inclusive=True)
+    # sp and ep store with regards to bwt, so we want to convert this to the start indexes of S. 
+    return sa[sp : ep + 1]
+
+
+
+if "__main__" == __name__:
+    pass # TODO get testing functions from other repo.
+
+
+#==============================================================
+# APPLIED QUESTION CODE
+#==============================================================
+# We have done Q6 for BWT lab
+def txt_from_bwt(bwt: list[str]) -> list[str]:
+    pass
 
 # Q4
 # If we are doing inversion, then we only need an array for occurences, 
@@ -138,11 +139,16 @@ def nOccurencesArrayForInversion(bwt, alphabet_size):
         nOccurences[i] = count[index(char)]
         count[index(char)] += 1
 
-def nOccurences(bwt, alphabet)
 
-if "__main__" == __name__:
-    alphabet = ['$', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    bwt = ['o', 'o', 'o', 'l', 'o', 'o', 'o', 'o', 'o', 'l', 'w', 'm', 'l']
-    counts = findCount(bwt, alphabet)
-    print(counts)
-    print(findRank(bwt, counts))
+"""
+BWT = L
+Burrows wheeler transform of a text is:
+    - create a matrix of all possible cyclic rotations of a txt
+    - sort these cyclic rotations
+    - take the last column
+
+This is useful because we can match k patterns with h ocurrences of length m, from a text of length n in:
+O(k*h*m + n)
+ie we can preprocess the text once.
+
+"""
