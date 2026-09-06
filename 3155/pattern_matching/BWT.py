@@ -120,10 +120,23 @@ def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
 # TESTING
 #==============================================================
 from test_pattern_match import construct_string, naive_pattern_match
-def test_bwt(txt_len: int = 5, pattern_len: int = 1000) -> bool:
+def test_bwt(txt_len: int = 5, pattern_len: int = 10000) -> bool:
     txt = construct_string(txt_len)
     pattern = construct_string(pattern_len)
+    if bwt_pattern_match(txt, pattern) == naive_pattern_match(txt, pattern):
+        print("------------------------------------------------------------")
+        print(txt)
+        print(pattern)
+        print(bwt_pattern_match(txt, pattern))
+        print(naive_pattern_match(txt, pattern))
+        print("------------------------------------------------------------")
     return bwt_pattern_match(txt, pattern) == naive_pattern_match(txt, pattern)
+
+"""
+Bug fixing issue
+1. we notice that our string generation generates a lot of stirngs which are all a's. 
+2. our pattern matching doesn't work when it is all a's
+3. the cases where the naive equals bwt is when both equal []. from increasing txt size we can see that this occurs when it shouldn't"""
 
 def test_bwt_multiple(test_count:int = 100) -> str:
     successes = 0

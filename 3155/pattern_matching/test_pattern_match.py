@@ -27,9 +27,9 @@ def naive_pattern_match(txt: list[str], pattern: list[str]) -> list[int]:
     for j in range(n - m + 1):
         match = True
         for i in range(m):
-            if txt[i] != pattern[j + i]:
+            if txt[i + j] != pattern[i]: # TODO change this line on boyer moore as well
                 match = False
-            break
+                break
         if match:
             matches.append(j)
     return matches

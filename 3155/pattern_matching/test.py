@@ -1,12 +1,20 @@
-bwt = "asdf"
-print(len(bwt))
+# Let's get our naive pattern matching to definitely work
+def naive_pattern_match(txt: list[str], pattern: list[str]) -> list[int]:
+    n = len(txt)
+    m = len(pattern)
+    matches = []
+    for j in range(n - m + 1):
+        match = True
+        for i in range(m):
+            if txt[j + i] != pattern[i]: #How has this never errored before???
+                match = False
+                # break
+        if match:
+            matches.append(j)
+    return matches
 
-# # my_list = ["1", "2", "3", "4"]
-# my_list = "abbba"
-# new = my_list + my_list
-# matrix = []
-# for i in range(len(my_list)):
-#     matrix.append(new[i:(len(my_list) + i)])
-# print(matrix)
-# matrix.sort()
-# print(matrix)
+pattern = 'aab'
+txt = 'abbaabaab'
+expect_output = [3, 6]
+print(naive_pattern_match(txt, pattern))
+# TODO my typehinting is wrong because they are expecting arrays atm. 
