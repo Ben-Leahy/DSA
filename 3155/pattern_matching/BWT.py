@@ -73,7 +73,7 @@ def create_n_occurences(bwt: list[str]) -> list[int]:
 
     for i, char in enumerate(bwt):
         if i > 0:
-            matrix[i] = matrix[i - 1]
+            matrix[i] = matrix[i - 1].copy() # TODO do I need to do this for BoyerMoore bad char array?
         matrix[i][index(char)] += 1
     return matrix
 
@@ -111,7 +111,7 @@ def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
             return []
         else:
             sp = rank[index(char)] + n_occurences(char, sp, occurences, inclusive=False)
-            ep = rank[index(char)] + n_occurences(char, ep - 1, occurences, inclusive=True)
+            ep = rank[index(char)] + n_occurences(char, ep, occurences, inclusive=True) - 1
     # sp and ep store with regards to bwt, so we want to convert this to the start indexes of S. 
     return sa[sp : ep + 1]
 
