@@ -29,7 +29,7 @@ def naive_pattern_match(txt: list[str], pattern: list[str]) -> list[int]:
         for i in range(m):
             if txt[i + j] != pattern[i]: # TODO change this line on boyer moore as well
                 match = False
-                break
+                # break
         if match:
             matches.append(j)
     return matches

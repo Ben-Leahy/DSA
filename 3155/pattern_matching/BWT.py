@@ -120,13 +120,13 @@ def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
 # TESTING
 #==============================================================
 from test_pattern_match import construct_string, naive_pattern_match
-def test_bwt(txt_len: int = 5, pattern_len: int = 10000) -> bool:
+def test_bwt(txt_len: int = 10000, pattern_len: int = 5) -> bool:
     txt = construct_string(txt_len)
     pattern = construct_string(pattern_len)
     if bwt_pattern_match(txt, pattern) == naive_pattern_match(txt, pattern):
         print("------------------------------------------------------------")
-        print(txt)
         print(pattern)
+        print(txt)
         print(bwt_pattern_match(txt, pattern))
         print(naive_pattern_match(txt, pattern))
         print("------------------------------------------------------------")
