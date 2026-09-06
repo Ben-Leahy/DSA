@@ -90,7 +90,7 @@ def n_occurences(char: str, i: int, occurences: list[list[int]], inclusive: bool
 #==============================================================
 # PATTERN MATCHING
 #==============================================================
-def pattern__match(txt:str, pattern: list[str]) -> list[int]:
+def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
     """
     We assume ascii characters between 97 and 122
     :output: returns a list of all the indexes where the pattern begins
@@ -113,10 +113,27 @@ def pattern__match(txt:str, pattern: list[str]) -> list[int]:
     return sa[sp : ep + 1]
 
 
+#==============================================================
+# TESTING
+#==============================================================
+from test_pattern_match import construct_string, naive_pattern_match
+def test_bwt(txt_len: int = 5, pattern_len: int = 1000) -> bool:
+    txt = construct_string(txt_len)
+    pattern = construct_string(pattern_len)
+    return bwt_pattern_match(txt, pattern) == naive_pattern_match(txt, pattern)
+
+def test_bwt_multiple(test_count:int = 100) -> str:
+    successes = 0
+    failures = 0
+    for _ in range (test_count):
+        if test_bwt():
+            successes += 1
+        else: 
+            failures += 1
+    return f"successes: {successes}  |  failures: {failures}"
 
 if "__main__" == __name__:
-    pass # TODO get testing functions from other repo.
-
+    print(test_bwt_multiple)
 
 #==============================================================
 # APPLIED QUESTION CODE
