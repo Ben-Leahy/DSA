@@ -12,7 +12,9 @@ def create_suffix_matrix(txt: str) -> list[tuple[str, int]]:
     return suffixes
 
 def create_sorted_suffix_matrix(txt: str) -> list[list[str]]:
-    return create_suffix_matrix(txt).sort(key = lambda tuple: tuple[0])
+    suffix_matrix = create_suffix_matrix(txt)
+    suffix_matrix.sort(key = lambda tuple: tuple[0])
+    return suffix_matrix
 
 def create_counts(bwt: list):
     """
@@ -73,6 +75,7 @@ def create_n_occurences(bwt: list[str]) -> list[int]:
         if i > 0:
             matrix[i] = matrix[i - 1]
         matrix[i][index(char)] += 1
+    return matrix
 
 def n_occurences(char: str, i: int, occurences: list[list[int]], inclusive: bool) -> int:
     """
@@ -83,9 +86,9 @@ def n_occurences(char: str, i: int, occurences: list[list[int]], inclusive: bool
         return 0
     else:
         if inclusive:
-            return occurences[index(char), i]
+            return occurences[i][index(char)]
         else:
-            return occurences[index(char), i - 1]
+            return occurences[i - 1][index(char)]
 
 #==============================================================
 # PATTERN MATCHING
@@ -95,11 +98,11 @@ def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
     We assume ascii characters between 97 and 122
     :output: returns a list of all the indexes where the pattern begins
     """
+    bwt, sa = create_bwt_and_SA(txt)
     n = len(bwt) # same as length of txt
     counts = create_counts(bwt)
     rank = create_rank(bwt, counts)
     occurences = create_n_occurences(bwt)
-    bwt, sa = create_bwt_and_SA(txt)
 
     sp = 0
     ep = n - 1
@@ -133,7 +136,7 @@ def test_bwt_multiple(test_count:int = 100) -> str:
     return f"successes: {successes}  |  failures: {failures}"
 
 if "__main__" == __name__:
-    print(test_bwt_multiple)
+    print(test_bwt_multiple())
 
 #==============================================================
 # APPLIED QUESTION CODE
