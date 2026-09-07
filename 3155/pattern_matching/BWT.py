@@ -1,19 +1,22 @@
 #==============================================================
 # HELPER FUNCTIONS
 #==============================================================
+# TODO I need to put in a unique terminal character... but how do I do this? what else will it break because I assume all characters are ascii 97-122?
+# TODO my typehinting is wrong because they are expecting arrays atm. 
 def create_suffix_matrix(txt: str) -> list[tuple[str, int]]:
     """returns a list of tuples, each containing a suffix and the index they start at with respect to txt"""
+    txt = txt + '$'
     n = len(txt)
     doubled_txt = txt + txt
     suffixes = [] # list of tuples: (str, int)
     for i in range(n):
-        tuple = (doubled_txt[i : i + n], i) # TODO I need to put in a unique terminal character... but how do I do this? what else will it break because I assume all characters are ascii 97-122?
+        tuple = (doubled_txt[i : i + n], i)
         suffixes.append(tuple)
     return suffixes
 
 def create_sorted_suffix_matrix(txt: str) -> list[list[str]]:
     suffix_matrix = create_suffix_matrix(txt)
-    suffix_matrix.sort(key = lambda tuple: tuple[0])
+    suffix_matrix.sort(key = lambda tuple: tuple[0]) # '$' < 'a' already as is appears earlier in the ascii alphabet
     return suffix_matrix
 
 def create_counts(bwt: list):
@@ -23,15 +26,18 @@ def create_counts(bwt: list):
     Complexity: O(|Alphabet| * |bwt|)
     Storage: O(|Alphabet|)
     """
-    ALPHABET_LENGTH = 122-97
-    counts = [0] * ALPHABET_LENGTH
+    ALPHABET_LENGTH = 122 - 97
+    counts = [0] * (ALPHABET_LENGTH + 1) # to include '$'
     for char in bwt:
         counts[index(char)] += 1
     return counts
     
 def index(char) -> int:
-    """Assumes alphabet is ascii range 97 - 122"""
-    return ord(char) - 97
+    """Assumes alphabet is ascii range 97 - 122, but includes '$' for terminal"""
+    if char == '$':
+        return 0
+    else:
+        return ord(char) - 97 + 1
 
 #==============================================================
 # REFERENCE TABLE CREATION
@@ -52,22 +58,21 @@ def create_rank(bwt: list, counts: list) -> list[int]: # TODO remove unecessary
     
     Complexity: O(|Alphabet| + |Alphabet| * |bwt|) = O(|Alphabet| * |bwt|)
     Storage: O(|Alphabet|) """
-    max_rank = 0
     rank = [0] * len(counts)
+    max_rank = 0
     for i in range(1, len(counts)): 
-        if counts[i] > 0:
-            rank[i] = max_rank + counts[i - 1]
-            max_rank = rank[i]
+        rank[i] = max_rank
+        max_rank += counts[i]
     return rank
 
 def create_n_occurrences(bwt: list[str]) -> list[int]:
     """
-    noccurrences[char, i] stores the number of occurrences of char in BWT(S) from 1...i INCLUSIVE
+    noccurrences[i, char] stores the number of occurrences of char in BWT(S) from 1...i INCLUSIVE
 
     complexity: O(|Alphabet| * |bwt|)
     storage: O(|Alphabet| * |bwt|)
     """
-    ALPHABET_LENGTH = 122-97
+    ALPHABET_LENGTH = 122 - 97 + 1 # including '$'
     n = len(bwt)
     matrix = [[0] * ALPHABET_LENGTH for _ in range(n)] # inner is alphabet
 
@@ -82,7 +87,7 @@ def n_occurrences(char: str, i: int, occurrences: list[list[int]], inclusive: bo
     input:
         i: range, from 1...i that we are searching for char within bwt"""
     # Base case
-    if i == 0 and not inclusive:
+    if i <= 0 and not inclusive:
         return 0
     else:
         if inclusive:
@@ -163,7 +168,17 @@ if "__main__" == __name__:
     # ans = bwt_pattern_match(txt, pattern)
     # ans.sort()
     # print(ans)
-    print(test_bwt_multiple())
+    txt = "banana"
+
+    bwt, sa = create_bwt_and_SA(txt)
+
+    print(bwt)
+    print(sa)
+
+    print(bwt_pattern_match("banana", "ana"))
+    print(bwt_pattern_match("banana", "nana"))
+    print(bwt_pattern_match("banana", "anab"))
+    # print(test_bwt_multiple())
 
 #==============================================================
 # APPLIED QUESTION CODE
