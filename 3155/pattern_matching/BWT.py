@@ -26,10 +26,11 @@ def create_counts(bwt: list):
     Complexity: O(|Alphabet| * |bwt|)
     Storage: O(|Alphabet|)
     """
-    ALPHABET_LENGTH = 122 - 97
+    ALPHABET_LENGTH = 122 - 97 + 1 
     counts = [0] * (ALPHABET_LENGTH + 1) # to include '$'
     for char in bwt:
         counts[index(char)] += 1
+    # print(f'counts ({len(counts)}): ', counts)
     return counts
     
 def index(char) -> int:
@@ -60,9 +61,11 @@ def create_rank(bwt: list, counts: list) -> list[int]: # TODO remove unecessary
     Storage: O(|Alphabet|) """
     rank = [0] * len(counts)
     max_rank = 0
-    for i in range(1, len(counts)): 
-        rank[i] = max_rank
-        max_rank += counts[i]
+    for i in range(0, len(counts)): 
+        if counts[i] > 0: # 0 if no occurences
+            rank[i] = max_rank
+            max_rank += counts[i]
+    # print(f'rank ({len(rank)}): ', rank)
     return rank
 
 def create_n_occurrences(bwt: list[str]) -> list[int]:
@@ -80,6 +83,7 @@ def create_n_occurrences(bwt: list[str]) -> list[int]:
         if i > 0:
             matrix[i] = matrix[i - 1].copy() # TODO do I need to do this for BoyerMoore bad char array?
         matrix[i][index(char)] += 1
+    # print('matrix', matrix)
     return matrix
 
 def n_occurrences(char: str, i: int, occurrences: list[list[int]], inclusive: bool) -> int:
@@ -112,9 +116,15 @@ def bwt_pattern_match(txt:str, pattern: list[str]) -> list[int]:
     sp = 0
     ep = n - 1
     for char in pattern[::-1]: # SERACH THE PATTERN IN REVERSE YOU DONKEY
+        # print('-------------------------------')
+        # print('sp: ', sp)
+        # print('ep: ', ep)
         if sp > ep:
             return []
         else:
+            # print('rank[index(char)]: ', rank[index(char)])
+            # print('n_occurrences(char, sp, occurrences, inclusive=False); ', n_occurrences(char, sp, occurrences, inclusive=False))
+            # print(' n_occurrences(char, ep, occurrences, inclusive=True) - 1: ',  n_occurrences(char, ep, occurrences, inclusive=True) - 1)
             sp = rank[index(char)] + n_occurrences(char, sp, occurrences, inclusive=False)
             ep = rank[index(char)] + n_occurrences(char, ep, occurrences, inclusive=True) - 1
     # sp and ep store with regards to bwt, so we want to convert this to the start indexes of S. 
@@ -150,7 +160,7 @@ Bug fixing issue
 2. our pattern matching doesn't work when it is all a's
 3. the cases where the naive equals bwt is when both equal []. from increasing txt size we can see that this occurs when it shouldn't"""
 
-def test_bwt_multiple(test_count:int = 10) -> str:
+def test_bwt_multiple(test_count:int = 100) -> str:
     successes = 0
     failures = 0
     for _ in range (test_count):
@@ -168,17 +178,17 @@ if "__main__" == __name__:
     # ans = bwt_pattern_match(txt, pattern)
     # ans.sort()
     # print(ans)
-    txt = "banana"
+    # txt = "banana"
 
-    bwt, sa = create_bwt_and_SA(txt)
+    # bwt, sa = create_bwt_and_SA(txt)
 
-    print(bwt)
-    print(sa)
+    # print(bwt)
+    # print(sa)
 
-    print(bwt_pattern_match("banana", "ana"))
-    print(bwt_pattern_match("banana", "nana"))
-    print(bwt_pattern_match("banana", "anab"))
-    # print(test_bwt_multiple())
+    # print(bwt_pattern_match("banana", "ana"))
+    # print(bwt_pattern_match("banana", "nana"))
+    # print(bwt_pattern_match("banana", "anab"))
+    print(test_bwt_multiple())
 
 #==============================================================
 # APPLIED QUESTION CODE
