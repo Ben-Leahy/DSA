@@ -1,7 +1,6 @@
 #==============================================================
 # HELPER FUNCTIONS
 #==============================================================
-# TODO I need to put in a unique terminal character... but how do I do this? what else will it break because I assume all characters are ascii 97-122?
 # TODO my typehinting is wrong because they are expecting arrays atm. 
 def create_suffix_matrix(txt: str) -> list[tuple[str, int]]:
     """returns a list of tuples, each containing a suffix and the index they start at with respect to txt"""
@@ -83,7 +82,7 @@ def create_n_occurrences(bwt: list[str]) -> list[int]:
         if i > 0:
             matrix[i] = matrix[i - 1].copy() # TODO do I need to do this for BoyerMoore bad char array?
         matrix[i][index(char)] += 1
-    # print('matrix', matrix)
+    # print(f'matrix ({len(matrix)})', matrix)
     return matrix
 
 def n_occurrences(char: str, i: int, occurrences: list[list[int]], inclusive: bool) -> int:
@@ -148,17 +147,6 @@ def test_bwt(txt_len: int = 1000, pattern_len: int = 5) -> bool:
         print(naive_pattern_match(txt, pattern))
         print("------------------------------------------------------------")
     return bwt_matches == naive_pattern_match(txt, pattern)
-
-"""
-Bug fixing issue
-1. pattern matching wasn't working. 
-    - resolve on this page
-    - TODO resolve on boyer moore and ensure all testing suites point to the same
-2. this now shows that bwt is not functioning as expected,
-    - Confirm noccurrunces
-1. we notice that our string generation generates a lot of stirngs which are all a's. 
-2. our pattern matching doesn't work when it is all a's
-3. the cases where the naive equals bwt is when both equal []. from increasing txt size we can see that this occurs when it shouldn't"""
 
 def test_bwt_multiple(test_count:int = 100) -> str:
     successes = 0
