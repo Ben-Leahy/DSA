@@ -22,4 +22,5 @@ expect_output = [3, 6]
 
 array = ['a', '$']
 array.sort()
-print(array)
+# print(array)
+

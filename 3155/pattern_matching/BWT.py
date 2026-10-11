@@ -76,7 +76,7 @@ def create_n_occurrences(bwt: list[str]) -> list[int]:
     """
     ALPHABET_LENGTH = 122 - 97 + 1 # including '$'
     n = len(bwt)
-    matrix = [[0] * ALPHABET_LENGTH for _ in range(n)] # inner is alphabet
+    matrix = [[0] * ALPHABET_LENGTH for _ in range(n)] # inner is alphabet # TODO see assignment for correction here with alphabet
 
     for i, char in enumerate(bwt):
         if i > 0:
